@@ -1,13 +1,9 @@
 
-# gcm-sender-async
+# ups-sender-async
 
-An asynchronous HTTP library for Google Cloud Messaging.
+An asynchronous HTTP library for the Ubuntu Push Server.
 
-Google provides a library for GCM (`gcm-server`), but it has a synchronous interface,
-along with an implementation that leaves something to be desired.
-
-This is asynchronous, backed by Apache HttpAsyncClient, automatically handles asynchronous
-retries with backoff, simple to use, and fast.
+This is heavily based on Open Whisper System's gcm-sender-async library.
 
 ## Installing
 
@@ -16,7 +12,7 @@ Add to your pom:
 ```
 <dependency>
   <groupId>org.whispersystems</groupId>
-  <artifactId>gcm-sender-async</artifactId>
+  <artifactId>ups-sender-async</artifactId>
   <version>(latest version here)</version>
 </dependency>
 ```
@@ -24,11 +20,12 @@ Add to your pom:
 ## Using
 
 ```
-String apiKey = "<myGcmApiKey>";
-Sender sender = new Sender(apiKey);
+Sender sender = new Sender();
 
 ListenableFuture<Result> future = sender.send(Message.newBuilder()
-                                                     .withDestination("<registration_id>")
+                                                     .withToken("<unique token")
+                                                     .withAppId("appname.user_appname")
+                                                     .withExpireOn("2016-12-24T03:00:00.000Z") //date in ISO 8601 format
                                                      .withDataPart("message", "hello world!");
 
 Futures.addCallback(future, new FutureCallback<Result>() {
