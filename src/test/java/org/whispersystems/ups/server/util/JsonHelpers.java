@@ -1,4 +1,4 @@
-package org.whispersystems.gcm.server.util;
+package org.whispersystems.ups.server.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-import static org.whispersystems.gcm.server.util.FixtureHelpers.fixture;
+import static org.whispersystems.ups.server.util.FixtureHelpers.fixture;
 
 public class JsonHelpers {
 

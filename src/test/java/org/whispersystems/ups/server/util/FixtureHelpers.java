@@ -1,4 +1,4 @@
-package org.whispersystems.gcm.server.util;
+package org.whispersystems.ups.server.util;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
