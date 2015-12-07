@@ -8,12 +8,12 @@
     </prerequisites>
 
     <groupId>org.whispersystems</groupId>
-    <artifactId>gcm-sender-async</artifactId>
-    <version>0.1.4</version>
+    <artifactId>ups-sender-async</artifactId>
+    <version>0.0.1</version>
 
-    <name>gcm-sender-async</name>
-    <description>An asynchronous GCM server library.</description>
-    <url>https://github.com/WhisperSystems/gcm-sender-async</url>
+    <name>ups-sender-async</name>
+    <description>An asynchronous Ubuntu push server library.</description>
+    <url>https://github.com/WhisperSystems/ups-sender-async</url>
 
     <licenses>
         <license>
@@ -27,12 +27,15 @@
         <developer>
             <name>Moxie Marlinspike</name>
         </developer>
+        <developer>
+            <name>Jani Monoses</name>
+        </developer>
     </developers>
 
     <scm>
-        <url>https://github.com/WhisperSystems/gcm-sender-async</url>
-        <connection>scm:git:https://github.com/WhisperSystems/gcm-sender-async.git</connection>
-        <developerConnection>scm:git:https://github.com/WhisperSystems/gcm-sender-async.git</developerConnection>
+        <url>https://github.com/WhisperSystems/ups-sender-async</url>
+        <connection>scm:git:https://github.com/WhisperSystems/ups-sender-async.git</connection>
+        <developerConnection>scm:git:https://github.com/WhisperSystems/ups-sender-async.git</developerConnection>
     </scm>
 
     <properties>
