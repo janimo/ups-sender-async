@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.whispersystems.gcm.server;
+package org.whispersystems.ups.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.whispersystems.gcm.server.internal.GcmRequestEntity;
+import org.whispersystems.ups.server.internal.UpsRequestEntity;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -29,28 +29,26 @@ public class Message {
 
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
-  private final String              collapseKey;
-  private final Long                ttl;
-  private final Boolean             delayWhileIdle;
+  private final String              appid;
+  private final String              token;
+  private final String              expireOn;
+  private final String              replaceTag;
+  private final Boolean             clearPending;
   private final Map<String, String> data;
-  private final List<String>        registrationIds;
-  private final String              priority;
 
-  private Message(String collapseKey, Long ttl, Boolean delayWhileIdle,
-                  Map<String, String> data, List<String> registrationIds,
-                  String priority)
+  private Message(String appid, String token, String expireOn, String replaceTag, Boolean clearPending,
+                          Map<String, String> data)
   {
-    this.collapseKey     = collapseKey;
-    this.ttl             = ttl;
-    this.delayWhileIdle  = delayWhileIdle;
+    this.appid     = appid;
+    this.token             = token;
+    this.expireOn  = expireOn;
+    this.clearPending  = clearPending;
+    this.replaceTag  = replaceTag;
     this.data            = data;
-    this.registrationIds = registrationIds;
-    this.priority        = priority;
   }
 
   public String serialize() throws JsonProcessingException {
-    GcmRequestEntity requestEntity = new GcmRequestEntity(collapseKey, ttl, delayWhileIdle,
-                                                          data, registrationIds, priority);
+    UpsRequestEntity requestEntity = new UpsRequestEntity(appid, token, expireOn, replaceTag, clearPending, data);
 
     return objectMapper.writeValueAsString(requestEntity);
   }
@@ -65,48 +63,35 @@ public class Message {
 
   public static class Builder {
 
-    private String              collapseKey     = null;
-    private Long                ttl             = null;
-    private Boolean             delayWhileIdle  = null;
+    private String              appid     = null;
+    private String              token     = null;
+    private String              expireOn     = null;
+    private String              replaceTag     = null;
+    private Boolean             clearPending     = null;
     private Map<String, String> data            = null;
-    private List<String>        registrationIds = new LinkedList<>();
-    private String              priority        = null;
 
     private Builder() {}
 
-    /**
-     * @param collapseKey The GCM collapse key to use (optional).
-     * @return The Builder.
-     */
-    public Builder withCollapseKey(String collapseKey) {
-      this.collapseKey = collapseKey;
+    public Builder withAppID(String appid) {
+      this.appid = appid;
       return this;
     }
 
-    /**
-     * @param seconds The TTL (in seconds) for this message (optional).
-     * @return The Builder.
-     */
-    public Builder withTtl(long seconds) {
-      this.ttl = seconds;
+    public Builder withToken(String token) {
+      this.token = token;
       return this;
     }
 
-    /**
-     * @param delayWhileIdle Set GCM delay_while_idle (optional).
-     * @return The Builder.
-     */
-    public Builder withDelayWhileIdle(boolean delayWhileIdle) {
-      this.delayWhileIdle = delayWhileIdle;
+    public Builder withExpireOn(String expireOn) {
+      this.expireOn = expireOn;
       return this;
     }
 
-    /**
-     * Set a key in the GCM JSON payload delivered to the application (optional).
-     * @param key The key to set.
-     * @param value The value to set.
-     * @return The Builder.
-     */
+    public Builder withReplaceTag(String replaceTag) {
+      this.replaceTag = replaceTag;
+      return this;
+    }
+
     public Builder withDataPart(String key, String value) {
       if (data == null) {
         data = new HashMap<>();
@@ -115,28 +100,6 @@ public class Message {
       return this;
     }
 
-    /**
-     * Set the destination GCM registration ID (mandatory).
-     * @param registrationId The destination GCM registration ID.
-     * @return The Builder.
-     */
-    public Builder withDestination(String registrationId) {
-      this.registrationIds.clear();
-      this.registrationIds.add(registrationId);
-      return this;
-    }
-
-    /**
-     * Set the GCM message priority (optional).
-     *
-     * @param priority Valid values are "normal" and "high."
-     *                 On iOS, these correspond to APNs priority 5 and 10.
-     * @return The Builder.
-     */
-    public Builder withPriority(String priority) {
-      this.priority = priority;
-      return this;
-    }
 
     /**
      * Construct a message object.
@@ -144,11 +107,11 @@ public class Message {
      * @return An immutable message object, as configured by this builder.
      */
     public Message build() {
-      if (registrationIds.isEmpty()) {
+      if (appid.isEmpty() || token.isEmpty()) {
         throw new IllegalArgumentException("You must specify a destination!");
       }
 
-      return new Message(collapseKey, ttl, delayWhileIdle, data, registrationIds, priority);
+      return new Message(appid, token, expireOn, replaceTag, clearPending, data);
     }
   }
 

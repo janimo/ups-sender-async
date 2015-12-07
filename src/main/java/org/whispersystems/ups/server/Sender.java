@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.whispersystems.gcm.server;
+package org.whispersystems.ups.server;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,8 +33,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.util.EntityUtils;
-import org.whispersystems.gcm.server.internal.GcmResponseEntity;
-import org.whispersystems.gcm.server.internal.GcmResponseListEntity;
+import org.whispersystems.ups.server.internal.UpsResponseEntity;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
@@ -50,38 +49,33 @@ import java.util.concurrent.TimeoutException;
  */
 public class Sender {
 
-  private static final String PRODUCTION_URL = "https://android.googleapis.com/gcm/send";
+  private static final String SERVER_URL = "https://push.ubuntu.com/notify";
 
   private final CloseableHttpAsyncClient client;
-  private final String                   authorizationHeader;
   private final RetryExecutor            executor;
   private final String                   url;
 
   /**
    * Construct a Sender instance.
-   *
-   * @param apiKey Your application's GCM API key.
    */
-  public Sender(String apiKey) {
-    this(apiKey, 10);
+  public Sender() {
+    this(10);
   }
 
   /**
    * Construct a Sender instance with a specified retry count.
    *
-   * @param apiKey Your application's GCM API key.
    * @param retryCount The number of retries to attempt on a network error or 500 response.
    */
-  public Sender(String apiKey, int retryCount) {
-    this(apiKey, retryCount, PRODUCTION_URL);
+  public Sender(int retryCount) {
+    this(retryCount, SERVER_URL);
   }
 
   @VisibleForTesting
-  public Sender(String apiKey, int retryCount, String url) {
+  public Sender(int retryCount, String url) {
     ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     this.url                 = url;
-    this.authorizationHeader = String.format("key=%s", apiKey);
 
     this.client = HttpAsyncClients.custom()
                                   .setMaxConnTotal(100)
@@ -123,7 +117,7 @@ public class Sender {
         SettableFuture<Result> future  = SettableFuture.create();
         HttpPost               request = new HttpPost(url);
 
-        request.setHeader("Authorization", authorizationHeader);
+
         request.setEntity(new StringEntity(message.serialize(),
                                            ContentType.parse("application/json")));
 
@@ -165,7 +159,6 @@ public class Sender {
 
         switch (result.getStatusLine().getStatusCode()) {
           case 400: future.setException(new InvalidRequestException());       break;
-          case 401: future.setException(new AuthenticationFailedException()); break;
           case 204:
           case 200: future.set(parseResult(responseBody));                    break;
           default:  future.setException(new ServerFailedException("Bad status: " + result.getStatusLine().getStatusCode()));
@@ -186,19 +179,11 @@ public class Sender {
     }
 
     private Result parseResult(String body) throws IOException {
-      List<GcmResponseEntity> responseList = objectMapper.readValue(body, GcmResponseListEntity.class)
-                                                         .getResults();
-
-      if (responseList == null || responseList.size() == 0) {
-        throw new IOException("Empty response list!");
-      }
-
-      GcmResponseEntity responseEntity = responseList.get(0);
-
+      UpsResponseEntity response = objectMapper.readValue(body, UpsResponseEntity.class);
       return new Result(this.requestContext,
-                        responseEntity.getCanonicalRegistrationId(),
-                        responseEntity.getMessageId(),
-                        responseEntity.getError());
+                        response.getOK(),
+                        response.getMessage(),
+                        response.getError());
     }
   }
 }
