@@ -1,4 +1,4 @@
-package org.whispersystems.gcm.server;
+package org.whispersystems.ups.server;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.squareup.okhttp.mockwebserver.MockResponse;
@@ -14,8 +14,8 @@ import java.util.concurrent.TimeoutException;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.*;
-import static org.whispersystems.gcm.server.util.FixtureHelpers.fixture;
-import static org.whispersystems.gcm.server.util.JsonHelpers.jsonFixture;
+import static org.whispersystems.ups.server.util.FixtureHelpers.fixture;
+import static org.whispersystems.ups.server.util.JsonHelpers.jsonFixture;
 
 public class SenderTest {
 
@@ -29,42 +29,21 @@ public class SenderTest {
     server.enqueue(successResponse);
 
     String                   context = "my context";
-    Sender                   sender  = new Sender("foobarbaz", 10, server.getUrl("/gcm/send").toExternalForm());
-    ListenableFuture<Result> future  = sender.send(Message.newBuilder().withDestination("1").build(), context);
+    Sender                   sender  = new Sender(10, server.getUrl("/ups/send").toExternalForm());
+    ListenableFuture<Result> future  = sender.send(Message.newBuilder().withAppID("appname").withToken("1").build(), context);
 
     Result result = future.get(10, TimeUnit.SECONDS);
 
     assertEquals(result.isSuccess(), true);
-    assertEquals(result.isThrottled(), false);
     assertEquals(result.isUnregistered(), false);
-    assertEquals(result.getMessageId(), "1:08");
     assertNull(result.getError());
-    assertNull(result.getCanonicalRegistrationId());
+    assertNull(result.getMessage());
     assertEquals(context, result.getContext());
 
     RecordedRequest request = server.takeRequest();
-    assertEquals(request.getPath(), "/gcm/send");
+    assertEquals(request.getPath(), "/ups/send");
     assertEquals(new String(request.getBody()), jsonFixture("fixtures/message-minimal.json"));
-    assertEquals(request.getHeader("Authorization"), "key=foobarbaz");
     assertEquals(request.getHeader("Content-Type"), "application/json");
-    assertEquals(server.getRequestCount(), 1);
-  }
-
-  @Test
-  public void testBadApiKey() throws ExecutionException, InterruptedException, TimeoutException {
-    MockResponse unauthorizedResponse = new MockResponse().setResponseCode(401);
-    server.enqueue(unauthorizedResponse);
-
-    Sender                   sender = new Sender("foobar", 10, server.getUrl("/gcm/send").toExternalForm());
-    ListenableFuture<Result> future = sender.send(Message.newBuilder().withDestination("1").build());
-
-    try {
-      future.get(10, TimeUnit.SECONDS);
-      throw new AssertionError();
-    } catch (ExecutionException ee) {
-      assertTrue(ee.getCause() instanceof AuthenticationFailedException);
-    }
-
     assertEquals(server.getRequestCount(), 1);
   }
 
@@ -73,8 +52,8 @@ public class SenderTest {
     MockResponse malformed = new MockResponse().setResponseCode(400);
     server.enqueue(malformed);
 
-    Sender                   sender = new Sender("foobarbaz", 10, server.getUrl("/gcm/send").toExternalForm());
-    ListenableFuture<Result> future = sender.send(Message.newBuilder().withDestination("1").build());
+    Sender                   sender = new Sender(10, server.getUrl("/ups/send").toExternalForm());
+    ListenableFuture<Result> future = sender.send(Message.newBuilder().withAppID("appid").withToken("1").build());
 
     try {
       future.get(10, TimeUnit.SECONDS);
@@ -93,8 +72,8 @@ public class SenderTest {
     server.enqueue(error);
     server.enqueue(error);
 
-    Sender sender = new Sender("foobarbaz", 2, server.getUrl("/gcm/send").toExternalForm());
-    ListenableFuture<Result> future = sender.send(Message.newBuilder().withDestination("1").build());
+    Sender sender = new Sender(2, server.getUrl("/ups/send").toExternalForm());
+    ListenableFuture<Result> future = sender.send(Message.newBuilder().withAppID("appid").withToken("1").build());
 
     try {
       future.get(10, TimeUnit.SECONDS);
@@ -118,18 +97,16 @@ public class SenderTest {
     server.enqueue(error);
     server.enqueue(success);
 
-    Sender sender = new Sender("foobarbaz", 3, server.getUrl("/gcm/send").toExternalForm());
-    ListenableFuture<Result> future = sender.send(Message.newBuilder().withDestination("1").build());
+    Sender sender = new Sender(3, server.getUrl("/ups/send").toExternalForm());
+    ListenableFuture<Result> future = sender.send(Message.newBuilder().withAppID("appid").withToken("1").build());
 
     Result result = future.get(10, TimeUnit.SECONDS);
 
     assertEquals(server.getRequestCount(), 4);
     assertEquals(result.isSuccess(), true);
-    assertEquals(result.isThrottled(), false);
     assertEquals(result.isUnregistered(), false);
-    assertEquals(result.getMessageId(), "1:08");
+    assertNull(result.getMessage());
     assertNull(result.getError());
-    assertNull(result.getCanonicalRegistrationId());
   }
 
   @Test
@@ -141,11 +118,11 @@ public class SenderTest {
     server.enqueue(response);
     server.enqueue(response);
 
-    Sender sender = new Sender("foobarbaz", 2, server.getUrl("/gcm/send").toExternalForm());
+    Sender sender = new Sender(2, server.getUrl("/ups/send").toExternalForm());
 
     server.get().shutdown();
 
-    ListenableFuture<Result> future = sender.send(Message.newBuilder().withDestination("1").build());
+    ListenableFuture<Result> future = sender.send(Message.newBuilder().withAppID("appname").withToken("1").build());
 
     try {
       future.get(10, TimeUnit.SECONDS);
@@ -161,9 +138,9 @@ public class SenderTest {
 
     server.enqueue(response);
 
-    Sender                   sender = new Sender("foobarbaz", 2, server.getUrl("/gcm/send").toExternalForm());
+    Sender                   sender = new Sender(2, server.getUrl("/ups/send").toExternalForm());
     ListenableFuture<Result> future = sender.send(Message.newBuilder()
-                                                         .withDestination("2")
+                                                         .withAppID("appname").withToken("2")
                                                          .withDataPart("message", "new message!")
                                                          .build());
 
@@ -171,7 +148,6 @@ public class SenderTest {
 
     assertFalse(result.isSuccess());
     assertTrue(result.isUnregistered());
-    assertFalse(result.isThrottled());
-    assertEquals(result.getError(), "NotRegistered");
+    assertEquals(result.getError(), "unknown-token");
   }
 }

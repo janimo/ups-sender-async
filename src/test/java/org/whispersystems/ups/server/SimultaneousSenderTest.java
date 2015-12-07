@@ -1,4 +1,4 @@
-package org.whispersystems.gcm.server;
+package org.whispersystems.ups.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static org.whispersystems.gcm.server.util.FixtureHelpers.fixture;
+import static org.whispersystems.ups.server.util.FixtureHelpers.fixture;
 
 public class SimultaneousSenderTest {
 
@@ -26,16 +26,16 @@ public class SimultaneousSenderTest {
 
   @Test
   public void testSimultaneousSuccess() throws TimeoutException, InterruptedException, ExecutionException, JsonProcessingException {
-    stubFor(post(urlPathEqualTo("/gcm/send"))
+    stubFor(post(urlPathEqualTo("/ups/send"))
                 .willReturn(aResponse()
                                 .withStatus(200)
                                 .withBody(fixture("fixtures/response-success.json"))));
 
-    Sender                         sender  = new Sender("foobarbaz", 2, "http://localhost:8089/gcm/send");
+    Sender                         sender  = new Sender(2, "http://localhost:8089/ups/send");
     List<ListenableFuture<Result>> results = new LinkedList<>();
 
     for (int i=0;i<1000;i++) {
-      results.add(sender.send(Message.newBuilder().withDestination("1").build()));
+      results.add(sender.send(Message.newBuilder().withAppID("appname").withToken("1").build()));
     }
 
     int i=0;
@@ -51,15 +51,15 @@ public class SimultaneousSenderTest {
 
   @Test
   public void testSimultaneousFailure() throws TimeoutException, InterruptedException {
-    stubFor(post(urlPathEqualTo("/gcm/send"))
+    stubFor(post(urlPathEqualTo("/ups/send"))
                 .willReturn(aResponse()
                                 .withStatus(503)));
 
-    Sender                         sender  = new Sender("foobarbaz", 2, "http://localhost:8089/gcm/send");
+    Sender                         sender  = new Sender(2, "http://localhost:8089/ups/send");
     List<ListenableFuture<Result>> futures = new LinkedList<>();
 
     for (int i=0;i<1000;i++) {
-      futures.add(sender.send(Message.newBuilder().withDestination("1").build()));
+      futures.add(sender.send(Message.newBuilder().withAppID("appname").withToken("1").build()));
     }
 
     for (ListenableFuture<Result> future : futures) {
