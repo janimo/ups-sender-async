@@ -14,27 +14,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.whispersystems.gcm.server.internal;
+package org.whispersystems.ups.server.internal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class GcmResponseEntity {
+public class UpsResponseEntity {
 
-  @JsonProperty(value = "message_id")
-  private String messageId;
+  @JsonProperty
+  private boolean ok;
 
-  @JsonProperty(value = "registration_id")
-  private String canonicalRegistrationId;
+  @JsonProperty
+  private String message;
 
   @JsonProperty
   private String error;
 
-  public String getMessageId() {
-    return messageId;
+  public boolean getOK() {
+    return ok;
   }
 
-  public String getCanonicalRegistrationId() {
-    return canonicalRegistrationId;
+  public String getMessage() {
+    return message;
   }
 
   public String getError() {

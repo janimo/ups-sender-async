@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.whispersystems.gcm.server.internal;
+package org.whispersystems.ups.server.internal;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -24,35 +24,35 @@ import java.util.List;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GcmRequestEntity {
+public class UpsRequestEntity {
 
-  @JsonProperty(value = "collapse_key")
-  private String collapseKey;
+  @JsonProperty
+  private String appid;
 
-  @JsonProperty(value = "time_to_live")
-  private Long ttl;
+  @JsonProperty
+  private String token;
 
-  @JsonProperty(value = "delay_while_idle")
-  private Boolean delayWhileIdle;
+  @JsonProperty(value = "expire_on")
+  private String expireOn;
+
+  @JsonProperty(value = "replace_tag")
+  private String replaceTag;
+
+  @JsonProperty(value = "clear_pending")
+  private Boolean clearPending;
 
   @JsonProperty(value = "data")
   private Map<String, String> data;
 
-  @JsonProperty(value = "registration_ids")
-  private List<String> registrationIds;
 
-  @JsonProperty
-  private String priority;
-
-  public GcmRequestEntity(String collapseKey, Long ttl, Boolean delayWhileIdle,
-                          Map<String, String> data, List<String> registrationIds,
-                          String priority)
+  public UpsRequestEntity(String appid, String token, String expireOn, String replaceTag, Boolean clearPending,
+                          Map<String, String> data)
   {
-    this.collapseKey     = collapseKey;
-    this.ttl             = ttl;
-    this.delayWhileIdle  = delayWhileIdle;
+    this.appid     = appid;
+    this.token             = token;
+    this.expireOn  = expireOn;
+    this.replaceTag  = replaceTag;
+    this.clearPending  = clearPending;
     this.data            = data;
-    this.registrationIds = registrationIds;
-    this.priority        = priority;
   }
 }
