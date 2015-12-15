@@ -1,4 +1,4 @@
-package org.whispersystems.ups.server.util;
+package ro.startx.ups.server.util;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;

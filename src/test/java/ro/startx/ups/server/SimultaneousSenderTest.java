@@ -1,4 +1,4 @@
-package org.whispersystems.ups.server;
+package ro.startx.ups.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static org.whispersystems.ups.server.util.FixtureHelpers.fixture;
+import static ro.startx.ups.server.util.FixtureHelpers.fixture;
 
 public class SimultaneousSenderTest {
 

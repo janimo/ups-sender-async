@@ -7,13 +7,13 @@
         <maven>3.0.0</maven>
     </prerequisites>
 
-    <groupId>org.whispersystems</groupId>
+    <groupId>ro.startx</groupId>
     <artifactId>ups-sender-async</artifactId>
     <version>0.0.1</version>
 
     <name>ups-sender-async</name>
     <description>An asynchronous Ubuntu push server library.</description>
-    <url>https://github.com/WhisperSystems/ups-sender-async</url>
+    <url>https://github.com/janimo/ups-sender-async</url>
 
     <licenses>
         <license>
@@ -33,9 +33,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/WhisperSystems/ups-sender-async</url>
-        <connection>scm:git:https://github.com/WhisperSystems/ups-sender-async.git</connection>
-        <developerConnection>scm:git:https://github.com/WhisperSystems/ups-sender-async.git</developerConnection>
+        <url>https://github.com/janimo/ups-sender-async</url>
+        <connection>scm:git:https://github.com/janimo/ups-sender-async.git</connection>
+        <developerConnection>scm:git:https://github.com/janimo/ups-sender-async.git</developerConnection>
     </scm>
 
     <properties>
@@ -138,7 +138,7 @@
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.5</version>
                 <configuration>
-                    <keyname>1A94222F</keyname>
+                    <keyname>D323B0DC</keyname>
                 </configuration>
                 <executions>
                     <execution>

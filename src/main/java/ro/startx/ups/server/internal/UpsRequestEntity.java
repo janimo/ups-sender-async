@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.whispersystems.ups.server.internal;
+package ro.startx.ups.server.internal;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;

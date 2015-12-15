@@ -14,30 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.whispersystems.ups.server.internal;
+package ro.startx.ups.server;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UpsResponseEntity {
-
-  @JsonProperty
-  private boolean ok;
-
-  @JsonProperty
-  private String message;
-
-  @JsonProperty
-  private String error;
-
-  public boolean getOK() {
-    return ok;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public String getError() {
-    return error;
-  }
+public class InvalidRequestException extends Exception {
 }

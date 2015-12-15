@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.whispersystems.ups.server;
+package ro.startx.ups.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.whispersystems.ups.server.internal.UpsRequestEntity;
+import ro.startx.ups.server.internal.UpsRequestEntity;
 
 import java.util.HashMap;
 import java.util.LinkedList;

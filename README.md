@@ -11,7 +11,7 @@ Add to your pom:
 
 ```
 <dependency>
-  <groupId>org.whispersystems</groupId>
+  <groupId>ro.startx</groupId>
   <artifactId>ups-sender-async</artifactId>
   <version>(latest version here)</version>
 </dependency>

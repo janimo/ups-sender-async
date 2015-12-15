@@ -1,11 +1,11 @@
-package org.whispersystems.ups.server;
+package ro.startx.ups.server;
 
 import org.junit.Test;
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
-import static org.whispersystems.ups.server.util.JsonHelpers.jsonFixture;
+import static ro.startx.ups.server.util.JsonHelpers.jsonFixture;
 
 public class MessageTest {
 

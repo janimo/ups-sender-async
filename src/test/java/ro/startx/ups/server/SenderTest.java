@@ -1,4 +1,4 @@
-package org.whispersystems.ups.server;
+package ro.startx.ups.server;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.squareup.okhttp.mockwebserver.MockResponse;
@@ -14,8 +14,8 @@ import java.util.concurrent.TimeoutException;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.*;
-import static org.whispersystems.ups.server.util.FixtureHelpers.fixture;
-import static org.whispersystems.ups.server.util.JsonHelpers.jsonFixture;
+import static ro.startx.ups.server.util.FixtureHelpers.fixture;
+import static ro.startx.ups.server.util.JsonHelpers.jsonFixture;
 
 public class SenderTest {
 
