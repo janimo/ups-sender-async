@@ -25,7 +25,6 @@ Sender sender = new Sender();
 ListenableFuture<Result> future = sender.send(Message.newBuilder()
                                                      .withToken("<unique token")
                                                      .withAppId("appname.user_appname")
-                                                     .withExpireOn("2016-12-24T03:00:00.000Z") //date in ISO 8601 format
                                                      .withDataPart("message", "hello world!");
 
 Futures.addCallback(future, new FutureCallback<Result>() {
