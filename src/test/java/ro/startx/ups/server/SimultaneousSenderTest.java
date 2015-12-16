@@ -35,7 +35,7 @@ public class SimultaneousSenderTest {
     List<ListenableFuture<Result>> results = new LinkedList<>();
 
     for (int i=0;i<1000;i++) {
-      results.add(sender.send(Message.newBuilder().withAppID("appname").withToken("1").build()));
+      results.add(sender.send(Message.newBuilder().withAppID("appid").withToken("1").build()));
     }
 
     int i=0;
@@ -59,7 +59,7 @@ public class SimultaneousSenderTest {
     List<ListenableFuture<Result>> futures = new LinkedList<>();
 
     for (int i=0;i<1000;i++) {
-      futures.add(sender.send(Message.newBuilder().withAppID("appname").withToken("1").build()));
+      futures.add(sender.send(Message.newBuilder().withAppID("appid").withToken("1").build()));
     }
 
     for (ListenableFuture<Result> future : futures) {

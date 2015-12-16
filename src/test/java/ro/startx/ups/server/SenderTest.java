@@ -30,7 +30,7 @@ public class SenderTest {
 
     String                   context = "my context";
     Sender                   sender  = new Sender(10, server.getUrl("/ups/send").toExternalForm());
-    ListenableFuture<Result> future  = sender.send(Message.newBuilder().withAppID("appname").withToken("1").build(), context);
+    ListenableFuture<Result> future  = sender.send(Message.newBuilder().withAppID("appid").withToken("1").withExpireOn("2016-01-01T00:00:00.000Z").build(), context);
 
     Result result = future.get(10, TimeUnit.SECONDS);
 
@@ -122,7 +122,7 @@ public class SenderTest {
 
     server.get().shutdown();
 
-    ListenableFuture<Result> future = sender.send(Message.newBuilder().withAppID("appname").withToken("1").build());
+    ListenableFuture<Result> future = sender.send(Message.newBuilder().withAppID("appid").withToken("1").build());
 
     try {
       future.get(10, TimeUnit.SECONDS);
@@ -140,7 +140,7 @@ public class SenderTest {
 
     Sender                   sender = new Sender(2, server.getUrl("/ups/send").toExternalForm());
     ListenableFuture<Result> future = sender.send(Message.newBuilder()
-                                                         .withAppID("appname").withToken("2")
+                                                         .withAppID("appid").withToken("2")
                                                          .withDataPart("message", "new message!")
                                                          .build());
 

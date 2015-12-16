@@ -1,4 +1,5 @@
 {
-  "appid" : "appname",
-  "token" : "1"
+  "appid" : "appid",
+  "token" : "1",
+  "expire_on": "2016-01-01T00:00:00.000Z"
 }

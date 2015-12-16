@@ -1,6 +1,7 @@
 {
-  "appid" : "appname",
+  "appid" : "appid",
   "token" : "2",
+  "expire_on": "2016-01-01T00:00:00.000Z",
   "data" : {
     "key1" : "value1",
     "key2" : "value2"

@@ -13,7 +13,8 @@ public class MessageTest {
   public void testMinimal() throws IOException {
     Message message = Message.newBuilder()
                              .withToken("1")
-                             .withAppID("appname")
+                             .withAppID("appid")
+                             .withExpireOn("2016-01-01T00:00:00.000Z")
                              .build();
 
     assertEquals(message.serialize(), jsonFixture("fixtures/message-minimal.json"));
@@ -23,7 +24,8 @@ public class MessageTest {
   public void testComplete() throws IOException {
     Message message = Message.newBuilder()
                              .withToken("1")
-                             .withAppID("appname")
+                             .withAppID("appid")
+                             .withExpireOn("2016-01-01T00:00:00.000Z")
                              .build();
 
     assertEquals(message.serialize(), jsonFixture("fixtures/message-complete.json"));
@@ -33,7 +35,8 @@ public class MessageTest {
   public void testWithData() throws IOException {
     Message message = Message.newBuilder()
                              .withToken("2")
-                             .withAppID("appname")
+                             .withAppID("appid")
+                             .withExpireOn("2016-01-01T00:00:00.000Z")
                              .withDataPart("key1", "value1")
                              .withDataPart("key2", "value2")
                              .build();
