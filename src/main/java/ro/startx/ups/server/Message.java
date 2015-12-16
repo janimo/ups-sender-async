@@ -101,6 +101,11 @@ public class Message {
       return this;
     }
 
+    public Builder withExpireIn(long ms) {
+      this.expireOn = msToExpirationDate(ms);
+      return this;
+    }
+
     public Builder withReplaceTag(String replaceTag) {
       this.replaceTag = replaceTag;
       return this;
