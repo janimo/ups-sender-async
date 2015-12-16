@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class Message {
 
@@ -63,14 +66,25 @@ public class Message {
 
   public static class Builder {
 
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private static final long A_DAY = 24 * 60 * 60 * 1000;
+
     private String              appid     = null;
     private String              token     = null;
-    private String              expireOn     = null;
+    private String              expireOn     = "";
     private String              replaceTag     = null;
     private Boolean             clearPending     = null;
     private Map<String, String> data            = null;
 
     private Builder() {}
+
+    private String msToExpirationDate(long ms) {
+      long now = System.currentTimeMillis();
+
+      Date exp = new Date(now + ms);
+
+      return dateFormat.format(exp);
+    }
 
     public Builder withAppID(String appid) {
       this.appid = appid;
@@ -111,9 +125,10 @@ public class Message {
         throw new IllegalArgumentException("You must specify a destination!");
       }
 
+      if (expireOn.isEmpty()) {
+        expireOn = msToExpirationDate(A_DAY);
+      }
       return new Message(appid, token, expireOn, replaceTag, clearPending, data);
     }
   }
-
-
 }
